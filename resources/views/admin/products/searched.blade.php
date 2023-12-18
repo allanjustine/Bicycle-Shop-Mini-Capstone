@@ -2,13 +2,6 @@
 
 @section('content')
     <div class="container">
-        <h3 class="mb-4">
-            @if ($search)
-                Search result for "{{ $search }}"
-            @else
-                No products found
-            @endif
-        </h3>
         <div class="col-sm-12">
             <a href="/admin/products/create" class="btn btn-primary mb-3 me-2 float-end">
                 <i class="fa-solid fa-boxes"></i> Add Product
@@ -21,89 +14,67 @@
             </form>
         </div>
         @if ($search)
-            <div class="table-responsive">
-                <table class="table table-hover table-striped">
-                    <thead>
+            <table class="table border rounded">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($products as $product)
                         <tr>
-                            <th>ID.</th>
-                            <th>Tracking code</th>
-                            <th>Product image</th>
-                            <th>Product category</th>
-                            <th>Product name</th>
-                            <th>Stock</th>
-                            <th>Price</th>
-                            <th>Sold</th>
-                            <th>Description</th>
-                            <th>Action</th>
-
+                            <td> {{ $product->id }} </td>
+                            <td> {{ $product->name }} </td>
+                            <td> {{ $product->description }} </td>
+                            <td> &#8369;{{ $product->price }} </td>
+                            <td> {{ $product->category->name }} </td>
+                            <td>
+                                <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
+                                    class="img-thumbnail rounded-circle" style="max-width: 150px; max-height: 150px;">
+                            </td>
+                            <td>
+                                <a href="/admin/products/update/{{ $product->id }}" class="btn btn-warning">Edit</a>
+                                <form action=" {{ route('admin.products.delete', $product->id) }}" method="post"
+                                    style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($products as $product)
-                            <tr>
-                                <td>{{ $product->id }}</td>
-                                <td>{{ $product->tracking_code }}</td>
-                                <td>
-                                    @if (is_array($product->product_image))
-                                        @foreach ($product->product_image as $index => $imagePath)
-                                            <img style="width: 40px; height: 40px; margin-bottom: -15px;"
-                                                class="rounded-circle border" src="{{ Storage::url($imagePath) }}"
-                                                alt="">
-                                        @endforeach
-                                    @else
-                                        <img style="width: 40px; height: 40px; margin-top: -10px;"
-                                            class="rounded-circle border" src="{{ Storage::url($product->product_image) }}"
-                                            alt="">
-                                    @endif
-                                </td>
-                                <td>{{ $product->category->name }}</td>
-                                <td>{{ $product->product_name }}</td>
-                                <td>{{ $product->stock }}</td>
-                                <td>&#8369;{{ number_format($product->price, 2) }}</td>
-                                <td>{{ $product->sold }}</td>
-                                <td>{{ $product->description }}</td>
-                                <td>
-                                    <a href="/admin/products/update/{{ $product->id }}" class="btn btn-primary mb-1"><i
-                                            class="far fa-pen-to-square"></i> Edit</a>
-                                    <a href="#" class="btn btn-danger mb-1" data-bs-toggle="modal"
-                                        data-bs-target="#deleteProduct{{ $product->id }}"><i class="far fa-trash"></i>
-                                        Delete</a>
-                                </td>
-                            </tr>
-                            @include('admin.products.delete')
-                        @empty
-                            <tr>
-                                <td colspan="10" class="text-center">
-                                    No data found.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-
-                <button class="btn btn-dark" onclick="goBack()">Back <i class="far fa-arrow-left"></i></button>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                No data found.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         @else
             <div class="table-responsive">
                 <table class="table table-hover table-striped">
                     <thead>
                         <tr>
-                            <th>ID.</th>
-                            <th>Tracking code</th>
-                            <th>Product image</th>
-                            <th>Product category</th>
-                            <th>Product name</th>
-                            <th>Stock</th>
-                            <th>Price</th>
-                            <th>Sold</th>
+                            <th>ID</th>
+                            <th>Name</th>
                             <th>Description</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Image</th>
                             <th>Action</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="10" class="text-center">
+                            <td colspan="7" class="text-center">
                                 No data found.
                             </td>
                         </tr>

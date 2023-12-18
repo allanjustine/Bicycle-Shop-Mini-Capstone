@@ -11,7 +11,6 @@ use App\Http\Controllers\Auth\AuthIndexController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\TestEnrollmentController;
-use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,10 +24,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/contact-us', [PageController::class, 'contact']);
-Route::put('/contact-us', [PageController::class, 'sendFeedback'])->name('feedback');
 Route::get('/', [IndexController::class, 'productList'])->name('carts');
-Route::get('/results/search', [IndexController::class, 'searchProduct'])->name('search');
+Route::get('/results/search', [IndexController::class, 'searchProduct'])->name('searched');
 
 Route::get('/login', [AuthIndexController::class, 'loginPage'])->name('login');
 Route::post('/', [AuthIndexController::class, 'login']);
@@ -58,8 +55,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/admin/users/{user}', [AdminPageController::class, 'delete'])->name('admin.user.delete');
 
         Route::get('/admin/logs', [LogController::class, 'index'])->name('logs.index');
-
-        Route::get('/admin/messages', [AdminIndexController::class, 'contacts']);
 
         Route::get('/admin/categories', [CategoryController::class, 'categories']);
         Route::get('/admin/categories/create', [CategoryController::class, 'createCategory']);

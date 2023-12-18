@@ -109,7 +109,7 @@ class OrderController extends Controller
             'user_id'          => $request->user_id
         ]);
 
-        $productName = $product->product_name;
+        $productName = $product->name;
 
         $log_entry = Auth::user()->name . " has ordered: " . $productName . " for " . $order->user->name . " with the id# " . $order->id;
         event(new UserLog($log_entry));

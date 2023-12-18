@@ -1,180 +1,143 @@
 @extends('normal-view.layout.base')
 
-@section('title')
-    | @if ($search)
-        Search result for "{{ $search }}"
-    @else
-        Ops! No records found!
-    @endif
-@endsection
-
 @section('content')
-    <div class="container">
-        @if ($search)
-            <h5 class="mt-5">Search result for "{{ $search }}"</h5>
-        @else
-            <h5 class="mt-5">No products searched</h5>
-        @endif
-    </div>
-    @if ($search)
-        <div class="container">
-            <div class="d-flex justify-content-center py-4">
-                <div class="col-md-6">
-                    <form class="form-inline" action="{{ route('search') }}" method="GET">
-                        @csrf
-                        <div class="input-group">
 
-                            <input type="search" class="form-control" placeholder="Search..." aria-label="Search"
-                                aria-describedby="button-addon2" name="search">
-                            <div class="input-group-append">
-                                <button class="btn text-white" type="submit" id="button-addon2"
-                                    style="background: rgb(217,216,227);
-                            background: linear-gradient(164deg, rgba(217,216,227,1) 0%, rgba(95,95,102,1) 35%, rgba(213,225,227,1) 100%);"><i
-                                        class="far fa-magnifying-glass"></i> Search</button>
-                            </div>
-                        </div>
-                    </form>
+    @if ($search)
+        <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://d1nymbkeomeoqg.cloudfront.net/photos/26/22/383687_8457_XL.jpg" class="d-block w-100"
+                        style="height: 450px; object-fit: cover;" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://hips.hearstapps.com/hmg-prod/images/allbikes-1539286251.jpg?crop=0.987xw:1.00xh;0.00814xw,0&resize=1200:*"
+                        class="d-block w-100" style="height: 450px; object-fit: cover;" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://pedalandchain.co.uk/cdn/shop/collections/Schwinn_eVoyageur_Mid-Drive_Cruiser_Electric_Bike_5_Level_Pedal_Assist_Comfort_Frame2_600x.jpg?v=1692213835"
+                        class="d-block w-100" style="height: 450px; object-fit: cover;" alt="...">
                 </div>
             </div>
-            <div class="row">
-                @forelse ($products as $product)
-                    <div class="col-md-4 mt-4">
-                        <div class="card card-body">
-                            <div
-                                class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
-                                <div id="carouselExample{{ $product->id }}" class="carousel slide">
-                                    <div class="carousel-inner">
-                                        @if (is_array($product->product_image))
-                                            @foreach ($product->product_image as $index => $imagePath)
-                                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                                                    <img src="{{ Storage::url($imagePath) }}" class="d-block" alt="..."
-                                                        style="width: 100%; height: 200px;">
-                                                </div>
-                                            @endforeach
-                                        @else
-                                            <img src="{{ Storage::url($imagePath) }}" class="d-block" alt="..."
-                                                style="width: 100%; height: 200px;">
-                                        @endif
-                                    </div>
-                                    <button class="carousel-control-prev" type="button"
-                                        data-bs-target="#carouselExample{{ $product->id }}" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button"
-                                        data-bs-target="#carouselExample{{ $product->id }}" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>
-
-                                <div class="media-body">
-                                    <h6 class="media-title font-weight-semibold">
-                                        <a href="#" data-abc="true">{{ $product->product_name }}</a>
-                                    </h6>
-
-                                    <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
-                                        <li class="list-inline-item"><a href="#" class="text-muted"
-                                                data-abc="true">{{ $product->category->name }}</a>
-                                        </li>
-                                    </ul>
-
-                                    <p class="mb-3">{{ $product->description }} </p>
-                                </div>
-
-                                <div class="mt-3 mt-lg-0 ml-lg-3 text-center">
-                                    <h3 class="mb-0 font-weight-semibold">
-                                        &#8369;{{ number_format($product->price, 2) }}</h3>
-
-                                    <div>
-                                        @if ($product->orders->avg('rating'))
-                                            @php
-                                                $roundedRating = round($product->orders->avg('rating'));
-                                            @endphp
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $roundedRating)
-                                                    <i class="fa fa-star"></i>
-                                                @else
-                                                    <i class="fa fa-star-o"></i>
-                                                @endif
-                                            @endfor
-                                        @else
-                                            <div class="text-muted">
-                                                No ratings yet
-                                            </div>
-                                        @endif
-                                    </div>
-
-                                    <div class="text-muted">
-                                        @if ($product->orders->where('comment', !null)->count() <= 1)
-                                            {{ $product->orders->where('comment', !null)->count() }} review
-                                        @else
-                                            {{ $product->orders->where('comment', !null)->count() }} reviews
-                                        @endif
-                                    </div>
-                                    <p>Sold: {{ $product->sold }}</p>
-
-                                    <div class="d-flex justify-content-center gap-3">
-                                        <form action="{{ route('carts') }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <input type="text" hidden value="{{ $product->id }}" name="product_id">
-                                            <button type="submit" class="btn btn-warning mt-4 text-white"><i
-                                                    class="far fa-cart-shopping mr-2"></i> Add to cart</button>
-                                            <a href="/orders/{{ $product->id }}" class="btn btn-info mt-4 text-white"><i
-                                                    class="far fa-cart-circle-check mr-2"></i> Add to order</a>
-                                        </form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <h5 class="text-center my-5">There's no products searched.</h5>
-                @endforelse
-            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-    @else
-        <div class="d-flex justify-content-center py-4">
-            <div class="col-md-5">
-                <form class="form-inline" action="{{ route('search') }}" method="GET">
-                    @csrf
-                    <div class="input-group">
 
-                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search"
-                            aria-describedby="button-addon2" name="search">
-                        <div class="input-group-append">
-                            <button class="btn text-white" type="submit" id="button-addon2"
-                                style="background: rgb(217,216,227);
-                    background: linear-gradient(164deg, rgba(217,216,227,1) 0%, rgba(95,95,102,1) 35%, rgba(213,225,227,1) 100%);"><i
-                                    class="far fa-magnifying-glass"></i> Search</button>
-                        </div>
+        <div class="container-fluid mt-5">
+            <div class="container">
+                <h2>Featured Bicycles</h2>
+
+                <div class="container">
+                    <form class="d-flex ms-auto py-md-2" role="search" action="{{ route('searched') }}" method="GET">
+                        @csrf
+                        <input class="form-control me-2" name="search" type="search" placeholder="Search"
+                            aria-label="Search" value="{{ $search }}">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    <hr>
+                </div>
+                <div class="container vehicleContainer mb-3">
+                    <div class="row align-items-center">
+                        @forelse ($products as $product)
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-3" title="{{ $product->description }}">
+                                <a href="#" class="card" href="" style="width: 100%; text-decoration:none;">
+
+                                    <form method="post" action="{{ route('orders.create', $product->id) }}">
+                                        @csrf
+                                        {{-- @if (!Auth::user()) --}}
+                                        {{-- @else --}}
+                                        {{-- <input type="text" class="form-control" id="user_id" name="user_id" value="{{Auth::user()->id}}" hidden> --}}
+                                        {{-- @endif --}}
+                                        <input type="text" class="form-control" id="product_id" name="product_id"
+                                            value="{{ $product->id }}" hidden>
+                                        <input type="number" class="form-control" id="total_price" name="total_price"
+                                            value="{{ $product->price }}" hidden>
+                                        <input type="text" class="form-control" id="status" value="Pending"
+                                            name="status" hidden>
+
+
+                                        <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top"
+                                            style="height: 25rem; object-fit:cover">
+                                        <div class="card-body">
+                                            <h3 class="card-text">{{ $product->name }}</h3>
+                                            <h5 class="card-text">&#8369;{{ number_format($product->price, 2) }}</h5>
+                                            @if (!Auth::user())
+                                                <button onclick='{{ url('/login') }}' class="btn btn-success my-2"><i
+                                                        class="bi bi-cart-plus"></i> Request order</button>
+                                            @else
+                                                <button type="submit" class="btn btn-success my-2"><i
+                                                        class="bi bi-cart-plus"></i>
+                                                    Request order</button>
+                                            @endif
+                                        </div>
+                                    </form>
+                                </a>
+                            </div>
+                        @empty
+                            <h5 class="text-center my-5">There's no products searched.</h5>
+                        @endforelse
                     </div>
+                </div>
+            </div>
+        @else
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                        class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://d1nymbkeomeoqg.cloudfront.net/photos/26/22/383687_8457_XL.jpg"
+                            class="d-block w-100" style="height: 450px; object-fit: cover;" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://hips.hearstapps.com/hmg-prod/images/allbikes-1539286251.jpg?crop=0.987xw:1.00xh;0.00814xw,0&resize=1200:*"
+                            class="d-block w-100" style="height: 450px; object-fit: cover;" alt="...">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://pedalandchain.co.uk/cdn/shop/collections/Schwinn_eVoyageur_Mid-Drive_Cruiser_Electric_Bike_5_Level_Pedal_Assist_Comfort_Frame2_600x.jpg?v=1692213835"
+                            class="d-block w-100" style="height: 450px; object-fit: cover;" alt="...">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="container">
+                <form class="d-flex ms-auto py-md-2" role="search" action="{{ route('searched') }}" method="GET">
+                    @csrf
+                    <input class="form-control me-2" name="search" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
-        </div>
-        <h5 class="text-center my-5">There's no products searched.</h5>
+            <hr>
+            <h5 class="text-center my-5">There's no products searched.</h5>
     @endif
 @endsection
-
-
-<style>
-    .mb-50 {
-        margin-bottom: 50px;
-    }
-
-
-    .bg-teal-400 {
-        background-color: #26a69a;
-    }
-
-    a {
-        text-decoration: none !important;
-    }
-
-
-    .fa {
-        color: red;
-    }
-</style>

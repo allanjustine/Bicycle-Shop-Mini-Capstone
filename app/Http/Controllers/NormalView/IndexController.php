@@ -59,7 +59,7 @@ class IndexController extends Controller
                 'total_price'      => $total,
                 'user_id'          => auth()->id()
             ]);
-            $productName = $product->product_name;
+            $productName = $product->name;
 
             $log_entry = Auth::user()->name . " has requested an order: " . $productName . " with the id# " . $product->id;
             event(new UserLog($log_entry));
@@ -75,7 +75,7 @@ class IndexController extends Controller
         $product = $order->product;
 
         $order->delete();
-        $productName = $product->product_name;
+        $productName = $product->name;
 
         $log_entry = Auth::user()->name . " has cancelled order: " . $productName . " with the id# " . $order->id;
         event(new UserLog($log_entry));
@@ -87,10 +87,8 @@ class IndexController extends Controller
     {
         $search = $request->search;
 
-        $products = Product::where('product_name', 'like', "%$search%")
-            ->orWhere('brand_name', 'like', "%$search%")
+        $products = Product::where('name', 'like', "%$search%")
             ->orWhere('price', 'like', "%$search%")
-            ->orWhere('tracking_code', 'like', "%$search%")
             ->orWhere('description', 'like', "%$search%")
             ->orWhereHas('category', function ($categoryQuery) use ($search) {
                 $categoryQuery->where('name', 'like', "%$search%");

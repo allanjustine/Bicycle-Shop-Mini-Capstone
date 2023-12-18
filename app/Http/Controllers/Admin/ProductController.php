@@ -19,14 +19,13 @@ class ProductController extends Controller
 
         $products = Product::with('category')
             ->where(function ($query) use ($search) {
-                $query->where('tracking_code', 'like', "%$search%")
-                    ->orWhere('product_name', 'like', "%$search%")
+                $query->where('name', 'like', "%$search%")
                     ->orWhere('price', 'like', "%$search%")
                     ->orWhere('description', 'like', "%$search%");
             })
             ->orWhereHas('category', function ($categoryQuery) use ($search) {
                 $categoryQuery->where('name', 'like', "%$search%")
-                    ->orWhere('remarks', 'like', "%$search%");
+                    ->orWhere('description', 'like', "%$search%");
             })
             ->orderBy('created_at', 'asc')
             ->get();
@@ -69,7 +68,7 @@ class ProductController extends Controller
         ]);
 
 
-        $log_entry = Auth::user()->name . " added a new product: " . $product->product_name . " with the id# " . $product->id;
+        $log_entry = Auth::user()->name . " added a new product: " . $product->name . " with the id# " . $product->id;
         event(new UserLog($log_entry));
 
         return redirect('/admin/products')->with('message', 'Product detail added successfully');
@@ -109,7 +108,7 @@ class ProductController extends Controller
             'image'                     => $imagePath,
         ]);
 
-        $log_entry = Auth::user()->name . " updated the product: " . $product->product_name . " with the id# " . $product->id;
+        $log_entry = Auth::user()->name . " updated the product: " . $product->name . " with the id# " . $product->id;
         event(new UserLog($log_entry));
 
         return redirect('/admin/products')->with('message', 'Product updated successfully');
@@ -117,7 +116,7 @@ class ProductController extends Controller
 
     public function delete(Product $product)
     {
-        $log_entry = Auth::user()->name . " deleted the product " . $product->product_name .  " with the id# " . $product->id;
+        $log_entry = Auth::user()->name . " deleted the product " . $product->name .  " with the id# " . $product->id;
         event(new UserLog($log_entry));
 
         Storage::disk('public')->delete($product->image);

@@ -43,6 +43,11 @@
     <div class="container-fluid mt-5">
         <div class="container">
             <h2>Featured Bicycles</h2>
+            <form class="d-flex ms-auto py-md-2" role="search" action="{{ route('searched') }}" method="GET">
+                @csrf
+                <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
             <hr>
         </div>
         <div class="container vehicleContainer mb-3">
